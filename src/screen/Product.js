@@ -9,27 +9,30 @@ import {
 } from 'react-native';
 import React from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import { addProductToCart, deleteItemfromCart, removeProductfromCart } from '../reduxTK/slice/cartSlice';
-import { useNavigation } from '@react-navigation/native';
-import { increaseQty, decreaseQty } from '../reduxTK/slice/productSlice';
-
+import {
+  addProductToCart,
+  deleteItemfromCart,
+  removeProductfromCart,
+} from '../reduxTK/slice/cartSlice';
+import {useNavigation} from '@react-navigation/native';
+import {increaseQty, decreaseQty} from '../reduxTK/slice/productSlice';
 
 const Product = () => {
-    const navigation = useNavigation()
+  const navigation = useNavigation();
   const product = useSelector(state => state.product);
-    const cartItem = useSelector(state => state.cart);
-    console.log("cartItem", cartItem)
-    console.log('product', product);
-    const dispatch = useDispatch()
+  const cartItem = useSelector(state => state.cart);
+  console.log('cartItem', cartItem);
+  console.log('product', product);
+  const dispatch = useDispatch();
 
-    getTotal = () => {
-        let total = 0
-        cartItem.map(item => {
-            total = total + item.qty * item.price;
-            console.log("total", total)
-        })
-        return total;
-    }
+  getTotal = () => {
+    let total = 0;
+    cartItem.map(item => {
+      total = total + item.qty * item.price;
+      console.log('total', total);
+    });
+    return total;
+  };
   return (
     <SafeAreaView style={styles.main}>
       <View style={styles.headerView}>
@@ -54,7 +57,7 @@ const Product = () => {
               No Data Found
             </Text>
           )}
-                  renderItem={({ item, index }) => {
+          renderItem={({item, index}) => {
             //   console.log("item", item)
             return (
               <View style={styles.ProductView}>
@@ -70,46 +73,50 @@ const Product = () => {
                         flexDirection: 'row',
                         alignItems: 'center',
                         gap: 10,
-                                }}>
-                                {item.qty == 0 ?(
-                                    <TouchableOpacity style={styles.buttonView} onPress={() => {
-                                        dispatch(addProductToCart(item))
-                                        dispatch(increaseQty(item.id))
-                                    }}>
-                                        <Text style={{ color: 'white' }}>Add to cart</Text>
-                                    </TouchableOpacity>
-   ) : null}
+                      }}>
+                      {item.qty == 0 ? (
+                        <TouchableOpacity
+                          style={styles.buttonView}
+                          onPress={() => {
+                            dispatch(addProductToCart(item));
+                            dispatch(increaseQty(item.id));
+                          }}>
+                          <Text style={{color: 'white'}}>Add to cart</Text>
+                        </TouchableOpacity>
+                      ) : null}
 
-                                {item.qty == 0 ? null : <View
-                                    style={{
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        gap: 10,
-                                    }}>
-                                    <TouchableOpacity onPress={() => {
-                                        dispatch(addProductToCart(item))
-                                        dispatch(increaseQty(item.id))
-                                    }} style={styles.plusButton}>
-                                        <Text style={styles.plusText}>+</Text>
-                                    </TouchableOpacity>
+                      {item.qty == 0 ? null : (
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            gap: 10,
+                          }}>
+                          <TouchableOpacity
+                            onPress={() => {
+                              dispatch(addProductToCart(item));
+                              dispatch(increaseQty(item.id));
+                            }}
+                            style={styles.plusButton}>
+                            <Text style={styles.plusText}>+</Text>
+                          </TouchableOpacity>
 
-                                    <Text style={styles.qtyText}>{item.qty}</Text>
-                                    <TouchableOpacity onPress={() => {
-                                        if (item.qty > 1) {
-
-                                            dispatch(removeProductfromCart(item))
-                                            dispatch(decreaseQty(item.id))
-                                        }
-                                        else {
-                                            dispatch(deleteItemfromCart(item.id))
-                                            dispatch(decreaseQty(item.id))
-
-                                        }
-                                    }} style={styles.plusButton}>
-                                        <Text style={styles.plusText}>-</Text>
-                                    </TouchableOpacity>
-                                </View>
-                                }
+                          <Text style={styles.qtyText}>{item.qty}</Text>
+                          <TouchableOpacity
+                            onPress={() => {
+                              if (item.qty > 1) {
+                                dispatch(removeProductfromCart(item));
+                                dispatch(decreaseQty(item.id));
+                              } else {
+                                dispatch(deleteItemfromCart(item.id));
+                                dispatch(decreaseQty(item.id));
+                              }
+                            }}
+                            style={styles.plusButton}>
+                            <Text style={styles.plusText}>-</Text>
+                          </TouchableOpacity>
+                        </View>
+                      )}
                     </View>
                   </View>
                 </View>
@@ -117,49 +124,64 @@ const Product = () => {
             );
           }}
         />
+      </View>
+
+      {cartItem.length > 0 ? (
+        <View style={styles.bottomView}>
+          <View style={styles.startView}>
+            <Text style={styles.additemText}>
+              {'added Items' + ' ' + cartItem.length}
+            </Text>
+
+            <Text style={styles.additemText}>{'Total' + ' ' + getTotal()}</Text>
           </View>
 
-          {cartItem.length > 0 ?(<View style={styles.bottomView}>
-
-              <View style={styles.startView}>
-                  <Text style={styles.additemText}>
-                      {"added Items" + " " + cartItem.length}
-                  </Text>
-
-                  <Text style={styles.additemText}>
-                      {"Total" + " "+ getTotal()}
-                  </Text>
-              </View>
-
-              <TouchableOpacity onPress={() => { navigation.navigate("cart") }} style={styles.cartButtton}>
-                  <Text style={styles.cartbuttonText}>
-                      View Cart
-                  </Text>
-              </TouchableOpacity>
-
-          </View>): null}
-          
-          
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('cart');
+            }}
+            style={styles.cartButtton}>
+            <Text style={styles.cartbuttonText}>View Cart</Text>
+          </TouchableOpacity>
+        </View>
+      ) : null}
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-    cartbuttonText: {
-        color:'white', fontSize:15, fontWeight:'500'
-    },
-    cartButtton: {
-        justifyContent: 'center', alignItems: 'center', height: 40, borderRadius: 10, width: 100, backgroundColor:'#1EA4E4'
-    },
-    additemText: {  
-        color:'black', fontSize:15, fontWeight:'600'
-    },
-    startView: {
-        
-    },
-    bottomView: {
-        width:'100%', justifyContent:'space-evenly', alignItems:'center', flex:1, position:'absolute', bottom:0, backgroundColor:'white', elevation:5, height:70, paddingHorizontal:20,  flexDirection:'row'
-    },
+  cartbuttonText: {
+    color: 'white',
+    fontSize: 15,
+    fontWeight: '500',
+  },
+  cartButtton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 40,
+    borderRadius: 10,
+    width: 100,
+    backgroundColor: '#1EA4E4',
+  },
+  additemText: {
+    color: 'black',
+    fontSize: 15,
+    fontWeight: '600',
+  },
+  startView: {},
+  bottomView: {
+    width: '100%',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    flex: 1,
+    position: 'absolute',
+    bottom: 0,
+    backgroundColor: 'white',
+    elevation: 5,
+    height: 70,
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+  },
   qtyText: {color: 'black', fontSize: 15, fontWeight: '600'},
   plusText: {color: 'white', fontSize: 13, fontWeight: '600'},
   plusButton: {

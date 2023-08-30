@@ -9,17 +9,39 @@ import {
 } from 'react-native';
 import React from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {addProductToCart, deleteItemfromCart, removeProductfromCart} from '../reduxTK/slice/cartSlice';
-import { decreaseQty, increaseQty } from '../reduxTK/slice/productSlice';
+import {
+  addProductToCart,
+  deleteItemfromCart,
+  removeProductfromCart,
+} from '../reduxTK/slice/cartSlice';
+import {decreaseQty, increaseQty} from '../reduxTK/slice/productSlice';
+import {useNavigation} from '@react-navigation/native';
 
 const Cart = () => {
+  const navigation = useNavigation();
   const cartItem = useSelector(state => state.cart);
   console.log('cartItem', cartItem);
   const dispatch = useDispatch();
+  getTotal = () => {
+    let total = 0;
+    cartItem.map(item => {
+      total = total + item.qty * item.price;
+      console.log('total', total);
+    });
+    return total;
+  };
   return (
     <SafeAreaView style={styles.main}>
       <View style={styles.headerView}>
         <Text style={styles.headerText}>Cart</Text>
+
+        <View>
+          <Text style={styles.simpleText}>{'Total ' + ' ' + getTotal()}</Text>
+
+          <Text style={styles.simpleText}>
+            {'Cart Item' + ' ' + cartItem.length}
+          </Text>
+        </View>
       </View>
 
       <View style={styles.flatlistView}>
@@ -29,16 +51,28 @@ const Cart = () => {
           showsVerticalScrollIndicator={false}
           // numColumns={3}
           ListEmptyComponent={() => (
-            <Text
-              style={{
-                color: 'black',
-                //   fontFamily: fonts.MontserratBold,
-                alignSelf: 'center',
-                fontSize: 20,
-                paddingTop: '50%',
-              }}>
-              No Data Found
-            </Text>
+            <View
+              style={{justifyContent: 'center', alignItems: 'center', gap: 20}}>
+              <Text
+                style={{
+                  color: 'black',
+                  //   fontFamily: fonts.MontserratBold,
+                  alignSelf: 'center',
+                  fontSize: 20,
+                  paddingTop: '50%',
+                }}>
+                No Data Found
+              </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.goBack();
+                }}
+                style={styles.backButton}>
+                <Text style={{color: 'white', fontSize: 15, fontWeight: '500'}}>
+                  Back
+                </Text>
+              </TouchableOpacity>
+            </View>
           )}
           renderItem={({item, index}) => {
             //   console.log("item", item)
@@ -64,26 +98,27 @@ const Cart = () => {
                             alignItems: 'center',
                             gap: 10,
                           }}>
-                                        <TouchableOpacity onPress={() => {
-                                            dispatch(addProductToCart(item))
-                                            dispatch(increaseQty(item.id))
-                                        }} style={styles.plusButton}>
+                          <TouchableOpacity
+                            onPress={() => {
+                              dispatch(addProductToCart(item));
+                              dispatch(increaseQty(item.id));
+                            }}
+                            style={styles.plusButton}>
                             <Text style={styles.plusText}>+</Text>
                           </TouchableOpacity>
 
                           <Text style={styles.qtyText}>{item.qty}</Text>
-                                        <TouchableOpacity onPress={() => {
-                                            if (item.qty > 1) {
-                                                
-                                                dispatch(removeProductfromCart(item))
-                                                dispatch(decreaseQty(item.id))
-                                            }
-                                            else {
-                                                dispatch(deleteItemfromCart(item.id))  
-                                                dispatch(decreaseQty(item.id))
-
-                                            }
-                                        }} style={styles.plusButton}>
+                          <TouchableOpacity
+                            onPress={() => {
+                              if (item.qty > 1) {
+                                dispatch(removeProductfromCart(item));
+                                dispatch(decreaseQty(item.id));
+                              } else {
+                                dispatch(deleteItemfromCart(item.id));
+                                dispatch(decreaseQty(item.id));
+                              }
+                            }}
+                            style={styles.plusButton}>
                             <Text style={styles.plusText}>-</Text>
                           </TouchableOpacity>
                         </View>
@@ -101,6 +136,19 @@ const Cart = () => {
 };
 
 const styles = StyleSheet.create({
+  backButton: {
+    width: 100,
+    height: 51,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#1EA4E4',
+    borderRadius: 10,
+  },
+  simpleText: {
+    color: 'black',
+    fontSize: 15,
+    fontWeight: '600',
+  },
   qtyText: {color: 'black', fontSize: 15, fontWeight: '600'},
   plusText: {color: 'white', fontSize: 13, fontWeight: '600'},
   plusButton: {
@@ -181,6 +229,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: 20,
     backgroundColor: 'white',
+    justifyContent: 'space-between',
     elevation: 5,
   },
 });
