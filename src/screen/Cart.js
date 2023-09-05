@@ -49,14 +49,12 @@ const Cart = () => {
           data={cartItem}
           style={{marginTop: 20}}
           showsVerticalScrollIndicator={false}
-          // numColumns={3}
           ListEmptyComponent={() => (
             <View
               style={{justifyContent: 'center', alignItems: 'center', gap: 20}}>
               <Text
                 style={{
                   color: 'black',
-                  //   fontFamily: fonts.MontserratBold,
                   alignSelf: 'center',
                   fontSize: 20,
                   paddingTop: '50%',
@@ -79,7 +77,7 @@ const Cart = () => {
             return (
               <View style={styles.ProductView}>
                 <View style={styles.imagepriceView}>
-                  <Image source={{uri : item.image}} style={styles.image} />
+                  <Image source={{uri: item.image}} style={styles.image} />
                   <View style={styles.priceTextView}>
                     <Text style={styles.priceText}>{item.title}</Text>
                     <Text style={styles.priceText}>{item.brand}</Text>

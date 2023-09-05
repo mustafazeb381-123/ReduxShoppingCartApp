@@ -44,12 +44,10 @@ const Product = () => {
           data={product}
           style={{marginTop: 20}}
           showsVerticalScrollIndicator={false}
-          // numColumns={3}
           ListEmptyComponent={() => (
             <Text
               style={{
                 color: 'black',
-                //   fontFamily: fonts.MontserratBold,
                 alignSelf: 'center',
                 fontSize: 20,
                 paddingTop: '50%',
