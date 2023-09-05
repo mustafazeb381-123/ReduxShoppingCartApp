@@ -10,6 +10,7 @@ import hash from './assets/images/hashpappies.png';
 import {useDispatch} from 'react-redux';
 import {addProduct} from './reduxTK/slice/productSlice';
 
+
 const data = [
   {id: 1, name: 'Prada', price: 1000, image: parada, qty: 0},
   {id: 2, name: 'Timber land', price: 1200, image: timber, qty: 0},
@@ -20,10 +21,34 @@ const data = [
 const Main = () => {
   const dispatch = useDispatch();
 
+
+  
+
   useEffect(() => {
-    data.map(item => {
-      dispatch(addProduct(item));
-    });
+    // data
+
+    const api = async () => {
+      try {
+        const response = await fetch('https://dummyjson.com/products');
+        const data = await response.json();
+
+        console.log(data);
+        // const prod = data.products;
+        const prod = data.products.map(product => ({
+          ...product,
+          qty: 0, // You can set any default quantity you prefer
+        }));
+        
+        prod.map(item => {
+          dispatch(addProduct(item));
+        });
+        console.log("prod", prod)
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    api()
   }, []);
 
   return <AppNavigation />;

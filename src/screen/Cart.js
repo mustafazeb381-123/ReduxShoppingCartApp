@@ -79,9 +79,10 @@ const Cart = () => {
             return (
               <View style={styles.ProductView}>
                 <View style={styles.imagepriceView}>
-                  <Image source={item.image} style={styles.image} />
+                  <Image source={{uri : item.image}} style={styles.image} />
                   <View style={styles.priceTextView}>
-                    <Text style={styles.priceText}>{item.name}</Text>
+                    <Text style={styles.priceText}>{item.title}</Text>
+                    <Text style={styles.priceText}>{item.brand}</Text>
 
                     <Text style={styles.nameText}>{'RS' + item.price}</Text>
 
@@ -189,7 +190,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   priceTextView: {
-    gap: 10,
+    gap: 5,
   },
   image: {
     width: 100,
